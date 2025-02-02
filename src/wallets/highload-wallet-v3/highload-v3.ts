@@ -59,11 +59,12 @@ export async function createHighloadWalletV3(
       };
     });
 
-    const timeout = options?.timeout ?? 128;
+    const timeout = options?.timeout ?? 120;
+    const createdAt = options?.createdAt ?? Math.floor(Date.now() / 1000) - 30;
 
     const { ok, value: msgHash } = await retry(
       async () => {
-        const msg = await wallet.sendBatch(keyPair.secretKey, messages, queryId, timeout, options?.createdAt);
+        const msg = await wallet.sendBatch(keyPair.secretKey, messages, queryId, timeout, createdAt);
         const msgHash = getMessageHash(wallet.address.toString(), msg);
         return msgHash;
       },
