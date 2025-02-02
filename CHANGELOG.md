@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.1.1
+
+### Patch Changes
+
+- 204f863: Fix wallet v5 testnet wallet id to -3
+
 ## 0.1.0
 
 ### Minor Changes
