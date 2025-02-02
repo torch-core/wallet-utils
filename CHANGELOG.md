@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.1.6
+
+### Patch Changes
+
+- e2413fb: change default config of highload wallet. timeout set to 120. createdAt set to now() - 30 seconds.
+
 ## 0.1.5
 
 ### Patch Changes
