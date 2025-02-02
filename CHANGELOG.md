@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.2.0
+
+### Minor Changes
+
+- 4dfa20a: add support for wallet v4
+
 ## 0.1.6
 
 ### Patch Changes
