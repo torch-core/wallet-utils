@@ -1,5 +1,14 @@
 import { mnemonicToWalletKey } from '@ton/crypto';
-import { internal, OpenedContract, OutActionSendMsg, SenderArguments, SendMode, TonClient, TonClient4 } from '@ton/ton';
+import {
+  internal,
+  OpenedContract,
+  OutActionSendMsg,
+  Sender,
+  SenderArguments,
+  SendMode,
+  TonClient,
+  TonClient4,
+} from '@ton/ton';
 import { HighloadWalletV3, HighloadWalletV3Config } from './highload-wrapper';
 import { HighloadQueryId } from './highload-query-id';
 import { getMessageHash, retry } from '../../utils';
@@ -10,6 +19,7 @@ export async function createHighloadWalletV3(
   config?: Omit<Partial<HighloadWalletV3Config>, 'publicKey'>,
 ): Promise<{
   wallet: OpenedContract<HighloadWalletV3>;
+  deploy: (sender: Sender, value: bigint) => Promise<void>;
   send: (args: SenderArguments | SenderArguments[], queryId: HighloadQueryId) => Promise<string>;
 }> {
   const keyPair = await mnemonicToWalletKey(mnemonic);
@@ -20,6 +30,10 @@ export async function createHighloadWalletV3(
       timeout: config?.timeout ?? 60, // 60 seconds
     }),
   );
+
+  const deploy = async (sender: Sender, value: bigint) => {
+    await wallet.sendDeploy(sender, value);
+  };
 
   const send = async (args: SenderArguments | SenderArguments[], queryId: HighloadQueryId): Promise<string> => {
     args = Array.isArray(args) ? args : [args];
@@ -56,6 +70,7 @@ export async function createHighloadWalletV3(
 
   return {
     wallet,
+    deploy,
     send,
   };
 }
