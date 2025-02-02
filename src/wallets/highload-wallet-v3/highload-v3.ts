@@ -35,7 +35,15 @@ export async function createHighloadWalletV3(
     await wallet.sendDeploy(sender, value);
   };
 
-  const send = async (args: SenderArguments | SenderArguments[], queryId: HighloadQueryId): Promise<string> => {
+  const send = async (
+    args: SenderArguments | SenderArguments[],
+    queryId: HighloadQueryId,
+    options?: {
+      value?: bigint;
+      verbose?: boolean;
+      timeout?: number;
+    },
+  ): Promise<string> => {
     args = Array.isArray(args) ? args : [args];
     const messages: OutActionSendMsg[] = args.map((arg) => {
       return {
@@ -45,19 +53,26 @@ export async function createHighloadWalletV3(
       };
     });
     const createdAt = Math.floor(Date.now() / 1000) - 30;
-    const timeout = 128;
+    const timeout = options?.timeout ?? 128;
 
     const { ok, value: msgHash } = await retry(
       async () => {
-        const msg = await wallet.sendBatch(keyPair.secretKey, messages, queryId, timeout, createdAt);
+        const msg = await wallet.sendBatch(
+          keyPair.secretKey,
+          messages,
+          queryId,
+          timeout,
+          createdAt,
+          options?.value ?? 0n,
+        );
         const msgHash = getMessageHash(wallet.address.toString(), msg);
         return msgHash;
       },
       {
         attempts: 10,
         attemptInterval: 5000,
-        verbose: false,
-        on_fail: () => console.log('Failed to send message'),
+        verbose: options?.verbose ?? false,
+        on_fail: (error: unknown) => console.error('Failed to send message', error),
       },
     );
 

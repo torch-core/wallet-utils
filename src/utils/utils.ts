@@ -16,13 +16,13 @@ export const getMessageHash = (dest: string, body: Cell) => {
 };
 
 type AsyncLambda<T> = () => Promise<T>;
-type DummyFunction = () => { ok: boolean; value: unknown };
+type DummyFunction = (error?: unknown) => { ok: boolean; value: unknown };
 
 type RetryParams = {
   attempts?: number;
   attemptInterval?: number;
   verbose?: boolean;
-  on_fail?: DummyFunction | (() => void);
+  on_fail?: DummyFunction | ((error: unknown) => void);
 };
 
 const DUMMY_FUNCTION_INSTANCE: DummyFunction = () => ({
@@ -38,18 +38,18 @@ const DEFAULT_RETRY_PARAMS: Required<RetryParams> = {
 };
 
 // Conditional return type based on success or failure
-type RetryResult<T> = { ok: true; value: T } | { ok: false; value: null };
+type RetryResult<T> = { ok: true; value: T } | { ok: false; value: null; error: unknown };
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
- * Tries to run specified lambda several times if it throws
+ * Tries to run specified lambda several times if it throws, passing the last error to on_fail
  * @type T - Type of the return value
  * @param lambda - Lambda function to execute
  * @param params - Retry parameters: attempts, attemptInterval, verbose, on_fail
- * @returns Result object with `ok` indicating success and `value` holding the return value
+ * @returns Result object with `ok` indicating success and `value` holding the return value or `error` holding the last encountered error
  */
 export async function retry<T>(lambda: AsyncLambda<T>, params: RetryParams = {}): Promise<RetryResult<T>> {
   const { attempts, attemptInterval, verbose, on_fail } = {
@@ -59,6 +59,7 @@ export async function retry<T>(lambda: AsyncLambda<T>, params: RetryParams = {})
 
   let value: T | null = null;
   let ok = false;
+  let lastError: unknown = null;
 
   for (let n = attempts; n > 0; n--) {
     try {
@@ -66,13 +67,17 @@ export async function retry<T>(lambda: AsyncLambda<T>, params: RetryParams = {})
       ok = true;
       break; // Exit loop on success
     } catch (error: unknown) {
+      lastError = error;
+
       if (typeof on_fail === 'function') {
-        on_fail();
+        on_fail(error);
       }
 
       if (verbose) {
-        console.error('Retry Error:', error, `\n[Retries left: ${n - 1}]`);
+        console.error(`Attempt ${attempts - n + 1} failed:`, error);
+        console.error(`Retries left: ${n - 1}\n`);
       }
+
       if (n > 1) await sleep(attemptInterval); // Avoid sleeping after the last attempt
     }
   }
@@ -80,6 +85,6 @@ export async function retry<T>(lambda: AsyncLambda<T>, params: RetryParams = {})
   if (ok) {
     return { ok, value: value as T }; // `value` is guaranteed to be `T` if `ok` is true
   } else {
-    return { ok, value: null }; // `value` is null if `ok` is false
+    return { ok, value: null, error: lastError }; // Return only the last error
   }
 }
