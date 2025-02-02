@@ -74,7 +74,7 @@ export async function retry<T>(lambda: AsyncLambda<T>, params: RetryParams = {})
       }
 
       if (verbose) {
-        console.error(`Attempt ${attempts - n + 1} failed:`, error);
+        console.error(`Attempt ${attempts - n + 1} failed`);
         console.error(`Retries left: ${n - 1}\n`);
       }
 
