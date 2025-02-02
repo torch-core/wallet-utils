@@ -1,13 +1,5 @@
 import { mnemonicToWalletKey } from '@ton/crypto';
-import {
-  internal,
-  OpenedContract,
-  SenderArguments,
-  SendMode,
-  TonClient,
-  TonClient4,
-  WalletContractV5R1,
-} from '@ton/ton';
+import { internal, SenderArguments, SendMode, TonClient, TonClient4, WalletContractV5R1 } from '@ton/ton';
 import { getMessageHash } from '../../utils';
 
 const MAINNET_WALLET_ID = -239;
@@ -38,18 +30,7 @@ export async function createWalletV5(
   tonClient: TonClient4 | TonClient,
   mnemonic: string[],
   network: 'mainnet' | 'testnet',
-): Promise<{
-  keyPair: { publicKey: Uint8Array; secretKey: Uint8Array };
-  wallet: OpenedContract<WalletContractV5R1>;
-  send: (
-    args: SenderArguments | SenderArguments[],
-    options?: {
-      seqno?: number;
-      sendMode?: SendMode;
-      timeout?: number;
-    },
-  ) => Promise<string>;
-}> {
+) {
   const keyPair = await mnemonicToWalletKey(mnemonic);
   const walletId = network === 'mainnet' ? MAINNET_WALLET_ID : TESTNET_WALLET_ID;
   const workchain = 0; // NOTE: only support basechain now
