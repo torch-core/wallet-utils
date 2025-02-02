@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.1.0
+
+### Minor Changes
+
+- 919deaa: feat: add deploy method to highload wallet V3 creation utility
+
 ## 0.0.1
 
 ### Patch Changes
