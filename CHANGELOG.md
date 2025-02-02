@@ -1,5 +1,16 @@
 # @torch-finance/wallet-utils
 
+## 0.1.3
+
+### Patch Changes
+
+- 6a5bde9: refactor: improve wallet creation methods with enhanced documentation and type simplification
+
+  - Simplified return types for wallet creation functions
+  - Added comprehensive JSDoc comments explaining function purposes and parameters
+  - Removed unnecessary type imports and simplified type declarations
+  - Updated function signatures to improve readability and maintainability
+
 ## 0.1.2
 
 ### Patch Changes
