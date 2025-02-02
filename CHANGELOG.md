@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.1.4
+
+### Patch Changes
+
+- fa8c28f: simplify retry utility error logging
+
 ## 0.1.3
 
 ### Patch Changes
