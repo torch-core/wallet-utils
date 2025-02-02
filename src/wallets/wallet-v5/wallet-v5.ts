@@ -11,7 +11,7 @@ import {
 import { getMessageHash } from '../../utils';
 
 const MAINNET_WALLET_ID = -239;
-const TESTNET_WALLET_ID = -1;
+const TESTNET_WALLET_ID = -3;
 
 /**
  * Creates a Wallet V5 instance and provides a function to send transactions.
