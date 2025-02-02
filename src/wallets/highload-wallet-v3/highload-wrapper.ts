@@ -114,7 +114,7 @@ export class HighloadWalletV3 implements Contract {
     value: bigint = 0n,
   ) {
     if (createdAt == undefined) {
-      createdAt = Math.floor(Date.now() / 1000) - 30;
+      createdAt = Math.floor(Date.now() / 1000);
     }
     return this.sendExternalMessage(provider, secretKey, {
       message: this.packActions(messages, value, query_id),

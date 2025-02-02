@@ -45,8 +45,9 @@ export async function createHighloadWalletV3(
     queryId: HighloadQueryId,
     options?: {
       verbose?: boolean;
+      createdAt?: number;
       timeout?: number;
-      on_fail?: (error: unknown) => void;
+      onFail?: (error: unknown) => void;
     },
   ): Promise<string> => {
     args = Array.isArray(args) ? args : [args];
@@ -57,12 +58,12 @@ export async function createHighloadWalletV3(
         outMsg: internal(arg),
       };
     });
-    const createdAt = Math.floor(Date.now() / 1000) - 30;
+
     const timeout = options?.timeout ?? 128;
 
     const { ok, value: msgHash } = await retry(
       async () => {
-        const msg = await wallet.sendBatch(keyPair.secretKey, messages, queryId, timeout, createdAt);
+        const msg = await wallet.sendBatch(keyPair.secretKey, messages, queryId, timeout, options?.createdAt);
         const msgHash = getMessageHash(wallet.address.toString(), msg);
         return msgHash;
       },
@@ -70,7 +71,7 @@ export async function createHighloadWalletV3(
         attempts: 10,
         attemptInterval: 5000,
         verbose: options?.verbose ?? false,
-        on_fail: options?.on_fail ?? ((error: unknown) => console.error('Failed to send message', error)),
+        on_fail: options?.onFail ?? (() => {}),
       },
     );
 
