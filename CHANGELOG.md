@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.1.2
+
+### Patch Changes
+
+- 528da8c: modify retry function for passing error as an argument of on_fail function
+
 ## 0.1.1
 
 ### Patch Changes
