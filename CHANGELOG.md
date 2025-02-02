@@ -1,5 +1,16 @@
 # @torch-finance/wallet-utils
 
+## 0.1.5
+
+### Patch Changes
+
+- 8f6aa6c: refactor: improve highload wallet V3 options and default behavior
+
+  - Added optional `createdAt` parameter to control message timestamp
+  - Renamed `on_fail` to `onFail` for consistency
+  - Updated default `createdAt` timestamp to current time
+  - Simplified error handling in retry mechanism
+
 ## 0.1.4
 
 ### Patch Changes
