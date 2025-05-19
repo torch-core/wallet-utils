@@ -63,7 +63,15 @@ export function createMultisigV2(tonClient: TonClient | TonClient4, config: Mult
     }
 
     const timeout = options?.timeout ?? Math.floor(Date.now() / 1000) + 60 * 60; // 1 hour
-    await wallet.sendNewOrder(sender, args.map(argToTransferRequest), timeout, options?.value);
+    await wallet.sendNewOrder(
+      sender,
+      args.map(argToTransferRequest),
+      timeout,
+      options?.value,
+      undefined,
+      undefined,
+      orderSeqno,
+    );
     const orderContract = wallet.getOrder(orderSeqno);
     return orderContract;
   };
