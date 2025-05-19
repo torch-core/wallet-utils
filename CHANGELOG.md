@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.2.1
+
+### Patch Changes
+
+- 0cb2208: Should set orderSeqno in multisig wallet send new order
+
 ## 0.2.0
 
 ### Minor Changes
