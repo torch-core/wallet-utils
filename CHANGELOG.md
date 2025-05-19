@@ -1,5 +1,11 @@
 # @torch-finance/wallet-utils
 
+## 0.2.2
+
+### Patch Changes
+
+- 110baea: Order Contract code should use library code
+
 ## 0.2.1
 
 ### Patch Changes
