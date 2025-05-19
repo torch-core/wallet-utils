@@ -264,7 +264,9 @@ export class Multisig implements Contract {
   }
 
   getOrder(_: ContractProvider, orderSeqno: bigint): OrderContract {
-    const code = Cell.fromHex(ORDER_CODE);
+    const code_raw = Cell.fromHex(ORDER_CODE);
+    let lib_prep = beginCell().storeUint(2, 8).storeBuffer(code_raw.hash()).endCell();
+    const code = new Cell({ exotic: true, bits: lib_prep.bits, refs: lib_prep.refs });
     const data = orderConfigToCell({ multisig: this.address, orderSeqno });
     const init = { code, data };
     const address = contractAddress(0, init);
